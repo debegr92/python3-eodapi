@@ -25,6 +25,9 @@ class EODAPI:
                     return json.loads(req.content.decode("utf-8"))
                 else:
                     logging.error('Error, status code: {0}'.format(req.status_code))
+                    if req.status_code in [402, 403]:
+                        # Not authorized or no API calls left
+                        return None
             except Exception as e:
                 logging.error(str(e))
             retries = retries + 1
@@ -41,6 +44,28 @@ class EODAPI:
     # Get all tickers of an exchange
     def getTickers(self, exchange):
         return self.doRequest(self.BASE_URL+'exchange-symbol-list/{0}'.format(exchange))
+
+    # Get information about trading hours and holidays
+    def getExchangeDetails(self, exchange, start="", end=""):
+        params = {"from":start, "to":end}
+        return self.doRequest(self.BASE_URL+'exchange-details/{0}'.format(exchange), params)
+
+    # Get 15-20 minutes delayed 1m price data
+    # Provide symbols with exchanges: VOW3.F,AAPL.US,MO.US
+    def getRealTimeData(self, symbols):
+        params = {}
+        if type(symbols) == list:
+            if len(symbols) > 1:
+                # Use s parameter for more than one symbol
+                params = {"s":symbols[1:]}
+                symbol = symbols[0]
+            else:
+                # One symbol in a list
+                symbol = symbols[0]
+        else:
+            # A symbol as string
+            symbol = symbols
+        return self.doRequest(self.BASE_URL+'real-time/{0}'.format(symbol), params)
 
     # Get options for a stock
     def getOptions(self, symbol, exchange):
