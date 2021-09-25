@@ -1,6 +1,7 @@
 import json
 import requests
 import logging
+from datetime import date, timedelta
 logging.basicConfig(level=logging.ERROR)
 
 
@@ -21,11 +22,12 @@ class EODAPI:
         while retries <= self.NUM_RETRIES:
             try:
                 req = requests.get(url, params=requestParams)
+                print(req.url)
                 if req.status_code == 200:
                     return json.loads(req.content.decode("utf-8"))
                 else:
                     logging.error('Error, status code: {0}'.format(req.status_code))
-                    if req.status_code in [402, 403]:
+                    if req.status_code in [402, 403, 422]:
                         # Not authorized or no API calls left
                         return None
             except Exception as e:
@@ -110,3 +112,17 @@ class EODAPI:
             dividendsData = self.doRequest(self.BASE_URL+'eod-bulk-last-day/{0}'.format(exchange), params)
         # Return combined data
         return {"quotes":quotesData, "splits":splitsData, "dividends":dividendsData}
+    
+    # Get IPOs
+    # Maximum 10 years data request in one API call
+    def getIPOs(self, start, end):
+        params = {"from":start, "to":end}
+        return self.doRequest(self.BASE_URL+'calendar/ipos', params)
+    
+    # Get only upcoming IPOs
+    def getUpcomingIPOs(self):
+        dateFrom = date.today()
+        dateTo = dateFrom + timedelta(days=364*10)  # Add nearly 10 years
+        todayString = dateFrom.strftime("%Y-%m-%d")
+        endString = dateTo.strftime("%Y-%m-%d")
+        return self.getIPOs(todayString, endString)

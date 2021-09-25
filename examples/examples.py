@@ -2,7 +2,7 @@ import json
 from eodapi import EODAPI
 
 # Use your API token
-api = EODAPI('OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX')
+#api = EODAPI('OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX')
 
 #f = api.getExchangeList()
 
@@ -39,3 +39,7 @@ print(json.dumps(f, indent="\t"))
 # Get API rate information
 d = api.getUserData()
 print(json.dumps(d, indent="\t"))
+
+# IPOs
+#ipos = api.getUpcomingIPOs()
+#print(json.dumps(ipos, indent="\t"))
