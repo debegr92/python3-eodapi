@@ -35,3 +35,7 @@ f = api.getFundamentals("AAPL", "US")
 #f = api.getRealTimeData(["VOW3.F", "AAPL.US"])
 
 print(json.dumps(f, indent="\t"))
+
+# Get API rate information
+d = api.getUserData()
+print(json.dumps(d, indent="\t"))

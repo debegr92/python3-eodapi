@@ -33,6 +33,10 @@ class EODAPI:
             retries = retries + 1
         return None
 
+    # Get information about API limit
+    def getUserData(self):
+        return self.doRequest(self.BASE_URL+'user')
+
     # Get the fundamentals of a stock
     def getFundamentals(self, symbol, exchange):
         return self.doRequest(self.BASE_URL+'fundamentals/{0}.{1}'.format(symbol, exchange))
