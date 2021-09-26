@@ -126,3 +126,11 @@ class EODAPI:
         todayString = dateFrom.strftime("%Y-%m-%d")
         endString = dateTo.strftime("%Y-%m-%d")
         return self.getIPOs(todayString, endString)
+
+    # Get insider transactions
+    # Use 'AAPL.US' as code to get all insider transactions of a single stock 
+    def getInsiderTransactions(self, start="", end="", code="", limit=1000):
+        params = {"from":start, "to":end, "limit":limit}
+        if len(code) > 0:
+            params["code"] = code
+        return self.doRequest(self.BASE_URL+'insider-transactions', params)

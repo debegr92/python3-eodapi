@@ -2,7 +2,7 @@ import json
 from eodapi import EODAPI
 
 # Use your API token
-#api = EODAPI('OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX')
+api = EODAPI('OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX')
 
 #f = api.getExchangeList()
 
@@ -37,9 +37,13 @@ f = api.getFundamentals("AAPL", "US")
 print(json.dumps(f, indent="\t"))
 
 # Get API rate information
-d = api.getUserData()
-print(json.dumps(d, indent="\t"))
+#d = api.getUserData()
+#print(json.dumps(d, indent="\t"))
 
 # IPOs
 #ipos = api.getUpcomingIPOs()
 #print(json.dumps(ipos, indent="\t"))
+
+# Insiders
+#it = api.getInsiderTransactions(start="2020-01-01", end="2020-12-31", code="AAPL.US")
+#print(json.dumps(it, indent="\t"))
