@@ -12,6 +12,8 @@ api = EODAPI('OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX')
 
 f = api.getFundamentals("AAPL", "US")
 
+#f = api.getSplitAdjustedQuotes("AAPL", "US")
+
 #f = api.getAllDividends("AAPL", "US")
 #f = api.getAllSplits("AAPL", "US")
 
