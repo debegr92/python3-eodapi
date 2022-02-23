@@ -4,48 +4,74 @@ from eodapi import EODAPI
 # Use your API token
 api = EODAPI('OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX')
 
-#f = api.getExchangeList()
+# Get API rate information
+status, data = api.getUserData()
+print(status)
+print(json.dumps(data, indent="\t"))
 
-#f = api.getTickers("XETRA")
+status, data = api.getExchangeList()
+print(status)
+print(json.dumps(data, indent="\t"))
 
-#f = api.getOptions("AAPL", "US")
+status, data = api.getTickers("XETRA")
+print(status)
+print(json.dumps(data, indent="\t"))
 
-f = api.getFundamentals("AAPL", "US")
+status, data = api.getOptions("AAPL", "US")
+print(status)
+print(json.dumps(data, indent="\t"))
 
-#f = api.getSplitAdjustedQuotes("AAPL", "US")
+status, data = api.getFundamentals("AAPL", "US")
+print(status)
+print(json.dumps(data, indent="\t"))
 
-#f = api.getAllDividends("AAPL", "US")
-#f = api.getAllSplits("AAPL", "US")
+status, data = api.getSplitAdjustedQuotes("AAPL", "US")
+print(status)
+print(json.dumps(data, indent="\t"))
 
-#f = api.getHistoricalData("AAPL", "US")
-#f = api.getHistoricalData("AAPL", "US", start="2021-08-01")
-#f = api.getHistoricalData("AAPL", "US", start="2021-07-01", end="2021-07-31")
+status, data = api.getAllDividends("AAPL", "US")
+print(status)
+print(json.dumps(data, indent="\t"))
+status, data = api.getAllSplits("AAPL", "US")
+print(status)
+print(json.dumps(data, indent="\t"))
+
+status, data = api.getHistoricalData("AAPL", "US")
+#status, data = api.getHistoricalData("AAPL", "US", start="2021-08-01")
+#status, data = api.getHistoricalData("AAPL", "US", start="2021-07-01", end="2021-07-31")
+print(status)
+print(json.dumps(data, indent="\t"))
 
 # Get only quotes as default
-#f = api.getBulk("F")
+status, data = api.getBulk("F")
 # Or also splits and dividends
-#f = api.getBulk("F", quotes=True, splits=True, dividends=True)
+#status, data = api.getBulk("F", quotes=True, splits=True, dividends=True)
 # For a specific date
-#f = api.getBulk("US", quotes=False, splits=True, dividends=True, date="2021-08-10")
+#status, data = api.getBulk("US", quotes=False, splits=True, dividends=True, date="2021-08-10")
+print(status)
+print(json.dumps(data, indent="\t"))
 
-#f = api.getExchangeDetails("XETRA")
-#f = api.getExchangeDetails("XETRA", start="2021-04-01", end="2021-05-01")
+status, data = api.getExchangeDetails("XETRA")
+#status, data = api.getExchangeDetails("XETRA", start="2021-04-01", end="2021-05-01")
+print(status)
+print(json.dumps(data, indent="\t"))
 
 # Single ticker
-#f = api.getRealTimeData("VOW3.F")
+status, data = api.getRealTimeData("VOW3.F")
+print(status)
+print(json.dumps(data, indent="\t"))
 # List of symbols
-#f = api.getRealTimeData(["VOW3.F", "AAPL.US"])
-
-print(json.dumps(f, indent="\t"))
-
-# Get API rate information
-#d = api.getUserData()
-#print(json.dumps(d, indent="\t"))
+status, data = api.getRealTimeData(["VOW3.F", "AAPL.US"])
+print(status)
+print(json.dumps(data, indent="\t"))
 
 # IPOs
-#ipos = api.getUpcomingIPOs()
+status, data = api.getUpcomingIPOs()
 #print(json.dumps(ipos, indent="\t"))
+print(status)
+print(json.dumps(data, indent="\t"))
 
 # Insiders
-#it = api.getInsiderTransactions(start="2020-01-01", end="2020-12-31", code="AAPL.US")
-#print(json.dumps(it, indent="\t"))
+status, data = api.getInsiderTransactions(start="2020-01-01", end="2020-12-31", code="AAPL.US")
+print(status)
+print(json.dumps(data, indent="\t"))

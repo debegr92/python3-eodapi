@@ -6,7 +6,6 @@ logging.basicConfig(level=logging.ERROR)
 
 class EODAPI:
 	BASE_URL = "https://eodhistoricaldata.com/api/"
-	NUM_RETRIES = 3
 
 	def __init__(self, apiToken):
 		self.apiToken = apiToken
@@ -17,22 +16,19 @@ class EODAPI:
 		defaultParams = {"fmt":"json", "api_token":self.apiToken}
 		# Overwrite with given parameters
 		requestParams = {**defaultParams, **params}
-		retries = 1
-		while retries <= self.NUM_RETRIES:
-			try:
-				req = requests.get(url, params=requestParams)
-				print(req.url)
-				if req.status_code == 200:
-					return json.loads(req.content.decode("utf-8"))
-				else:
-					logging.error('Error, status code: {0}'.format(req.status_code))
-					if req.status_code in [402, 403, 422]:
-						# Not authorized or no API calls left
-						return None
-			except Exception as e:
-				logging.error(str(e))
-			retries = retries + 1
-		return None
+
+		try:
+			req = requests.get(url, params=requestParams)
+			if req.status_code == 200:
+				return 200, json.loads(req.content.decode("utf-8"))
+			else:
+				logging.error('Error, status code: {0}'.format(req.status_code))
+				# Not authorized or no API calls left, unknown ticker
+				return req.status_code, None
+		except Exception as e:
+			logging.error(str(e))
+
+		return 500, None
 
 	# Get information about API limit
 	def getUserData(self):
@@ -93,8 +89,11 @@ class EODAPI:
 	# Get bulk data for one exchange
 	# Default: Get only quotes
 	# You can also request splits and dividends.
-	# Returned data {"quotes":[], "splits":[], "dividends":[]}
+	# Returned data [statusQ, statusS, statusD], {"quotes":[], "splits":[], "dividends":[]}
 	def getBulk(self, exchange, quotes=True, splits=False, dividends=False, date=None):
+		statusQ = 200
+		statusS = 200
+		statusD = 200
 		quotesData = []
 		splitsData = []
 		dividendsData = []
@@ -102,15 +101,15 @@ class EODAPI:
 		if date != None:
 			params["date"] = date
 		if quotes:
-			quotesData = self.doRequest(self.BASE_URL+'eod-bulk-last-day/{0}'.format(exchange), params)
+			statusQ, quotesData = self.doRequest(self.BASE_URL+'eod-bulk-last-day/{0}'.format(exchange), params)
 		if splits:
 			params["type"] = "splits"
-			splitsData = self.doRequest(self.BASE_URL+'eod-bulk-last-day/{0}'.format(exchange), params)
+			statusS, splitsData = self.doRequest(self.BASE_URL+'eod-bulk-last-day/{0}'.format(exchange), params)
 		if dividends:
 			params["type"] = "dividends"
-			dividendsData = self.doRequest(self.BASE_URL+'eod-bulk-last-day/{0}'.format(exchange), params)
+			statusD, dividendsData = self.doRequest(self.BASE_URL+'eod-bulk-last-day/{0}'.format(exchange), params)
 		# Return combined data
-		return {"quotes":quotesData, "splits":splitsData, "dividends":dividendsData}
+		return [statusQ, statusS, statusD], {"quotes":quotesData, "splits":splitsData, "dividends":dividendsData}
 	
 	# Get IPOs
 	# Maximum 10 years data request in one API call
