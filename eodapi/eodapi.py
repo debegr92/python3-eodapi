@@ -43,8 +43,9 @@ class EODAPI:
 		return self.doRequest(self.BASE_URL+'exchanges-list')
 	
 	# Get all tickers of an exchange
-	def getTickers(self, exchange):
-		return self.doRequest(self.BASE_URL+'exchange-symbol-list/{0}'.format(exchange))
+	def getTickers(self, exchange, onlyDelisted=False):
+		params = {"delisted":"1" if onlyDelisted else "0"}
+		return self.doRequest(self.BASE_URL+'exchange-symbol-list/{0}'.format(exchange), params)
 
 	# Get information about trading hours and holidays
 	def getExchangeDetails(self, exchange, start="", end=""):
